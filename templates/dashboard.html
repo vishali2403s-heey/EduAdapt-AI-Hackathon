@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EduAdapt AI | Learning Dashboard</title>
+  <style>
+    :root {
+      --bg: #f5f7fc;
+      --card: #ffffff;
+      --ink: #202746;
+      --muted: #7a829c;
+      --primary: #6658e8;
+      --border: #e9ebf5;
+      --green: #139b79;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .layout { display: flex; min-height: 100vh; }
+    aside {
+      width: 235px;
+      padding: 28px 18px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .brand { font-size: 21px; font-weight: 800; margin-bottom: 38px; }
+    .brand span { color: var(--primary); }
+    .nav { padding: 13px 14px; border-radius: 12px; color: var(--muted); margin: 7px 0; }
+    .nav.active { background: #eeecff; color: var(--primary); font-weight: 700; }
+    main { padding: 32px; width: 100%; max-width: 1500px; margin: auto; }
+    .top { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 26px; }
+    h1 { margin: 0 0 8px; font-size: clamp(25px, 3vw, 34px); }
+    h2 { font-size: 18px; margin-top: 0; }
+    p { color: var(--muted); line-height: 1.6; }
+    .pill { border-radius: 20px; background: #eeecff; color: var(--primary); padding: 10px 14px; font-size: 13px; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 20px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 22px; min-width: 0; box-shadow: 0 5px 20px #28325b05; }
+    .metric { font-size: 32px; font-weight: 800; margin: 12px 0 4px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    label { display: block; margin: 14px 0 7px; font-size: 13px; font-weight: 700; }
+    input, textarea, select {
+      width: 100%; border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px; font: inherit; background: white; color: var(--ink);
+    }
+    textarea { resize: vertical; min-height: 95px; }
+    button {
+      border: 0; border-radius: 10px; padding: 12px 16px;
+      background: var(--primary); color: white; font-weight: 700;
+      cursor: pointer; margin-top: 12px;
+    }
+    button:disabled { opacity: .55; cursor: wait; }
+    .secondary { background: #eeecff; color: var(--primary); }
+    .answer { white-space: pre-wrap; line-height: 1.7; margin-top: 15px; overflow-wrap: anywhere; }
+    .option {
+      display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--border);
+      padding: 12px; margin: 9px 0; border-radius: 10px; cursor: pointer;
+    }
+    .option input { width: auto; margin-top: 3px; }
+    .bar { height: 8px; background: #eeeefa; border-radius: 10px; overflow: hidden; margin: 10px 0 18px; }
+    .bar div { height: 100%; background: var(--primary); border-radius: 10px; }
+    .status { font-size: 13px; margin-top: 12px; color: var(--green); white-space: pre-wrap; }
+    .error { color: #b42318; }
+    .full { margin-bottom: 20px; }
+    .topic-row { padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .topic-row:last-child { border-bottom: 0; }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+      .two { grid-template-columns: 1fr; }
+      aside { width: 180px; }
+      main { padding: 20px; }
+    }
+    @media (max-width: 600px) {
+      .layout { display: block; }
+      aside { width: 100%; padding: 15px; border-right: 0; }
+      .brand { margin-bottom: 12px; }
+      .nav { display: inline-block; margin: 3px; }
+      .grid { grid-template-columns: 1fr; }
+      .top { align-items: flex-start; flex-direction: column; }
+      main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="brand">✦ EduAdapt <span>AI</span></div>
+    <div class="nav active">▦ &nbsp; Dashboard</div>
+    <div class="nav">✧ &nbsp; AI Tutor</div>
+    <div class="nav">◉ &nbsp; Practice Quiz</div>
+    <div class="nav">↗ &nbsp; My Progress</div>
+    <p style="font-size:12px;margin:35px 8px 0">YOUR PERSONAL LEARNING SPACE</p>
+  </aside>
+
+  <main>
+    <div class="top">
+      <div>
+        <h1>Welcome back, learner! 👋</h1>
+        <p>Your learning journey, personalized for you.</p>
+      </div>
+      <div class="pill">✦ AI-powered learning</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="muted">Questions answered</div>
+        <div class="metric" id="total">{{ total_answers }}</div>
+        <div class="muted">Across your practice quizzes</div>
+      </div>
+      <div class="card">
+        <div class="muted">Overall accuracy</div>
+        <div class="metric" id="accuracy">{{ accuracy }}%</div>
+        <div class="bar"><div id="accuracyBar" style="width:{{ accuracy }}%"></div></div>
+      </div>
+      <div class="card">
+        <div class="muted">Study material</div>
+        <div class="metric" style="font-size:21px;margin-top:18px" id="filename">
+          {{ filename or "Not uploaded yet" }}
+        </div>
+        <div class="muted" id="materialStatus">
+          {{ "Ready for study" if has_material else "Upload a document to begin" }}
+        </div>
+      </div>
+    </div>
+
+    <section class="card full">
+      <h2>📚 Upload your learning material</h2>
+      <p>Upload a PDF, PowerPoint presentation, or text file to give your tutor context.</p>
+      <form id="uploadForm">
+        <input type="file" name="document" id="document" accept=".pdf,.pptx,.txt" required>
+        <button type="submit" id="uploadButton">Upload material</button>
+      </form>
+      <div class="status" id="uploadStatus" role="status"></div>
+    </section>
+
+    <div class="two">
+      <section class="card">
+        <h2>🤖 Ask your AI tutor</h2>
+        <p>Ask a question and get a clear explanation.</p>
+        <form id="askForm">
+          <label for="question">What would you like to understand?</label>
+          <textarea id="question" maxlength="2000" required placeholder="Explain this concept in simple terms..."></textarea>
+          <button type="submit" id="askButton">Ask EduAdapt AI ↗</button>
+        </form>
+        <div class="answer" id="answer" aria-live="polite"></div>
+      </section>
+
+      <section class="card">
+        <h2>🎯 Adaptive practice</h2>
+        <p>Test your understanding with a personalized practice quiz.</p>
+        <label for="topic">Topic</label>
+        <input id="topic" maxlength="100" value="General" placeholder="e.g. Biology">
+        <label for="difficulty">Starting difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button type="button" id="startQuiz">Start quiz →</button>
+        <div id="quizArea" style="margin-top:18px" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <section class="card full" style="margin-top:20px">
+      <h2>📈 Topic mastery</h2>
+      {% if topics %}
+        {% for topic, stat in topics.items() %}
+          {% set pct = (stat.correct * 100 / stat.total)|round|int if stat.total else 0 %}
+          <div class="topic-row">
+            <div style="display:flex;justify-content:space-between;gap:12px">
+              <strong>{{ topic }}</strong><span>{{ pct }}%</span>
+            </div>
+            <div class="bar"><div style="width:{{ pct }}%"></div></div>
+            <div class="muted">{{ stat.correct }} correct out of {{ stat.total }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>Complete a quiz to start building your topic mastery profile.</p>
+      {% endif %}
+    </section>
+
+    <section class="card full">
+      <h2>🗓️ Your revision plan</h2>
+      {% if revision_plan %}
+        {% for item in revision_plan %}
+          <div class="topic-row">
+            <strong>{{ item.topic }}</strong>
+            <span class="muted"> · {{ item.accuracy }}% accuracy</span>
+            <p style="margin-bottom:0">{{ item.action }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>Your personalized revision recommendations will appear after your first quiz.</p>
+      {% endif %}
+    </section>
+  </main>
+</div>
+
+<script>
+  async function api(url, options = {}) {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...(options.body instanceof FormData ? {} : {"Content-Type": "application/json"}),
+        ...(options.headers || {})
+      }
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "Something went wrong.");
+    return data;
+  }
+
+  function showStatus(id, message, error = false) {
+    const el = document.getElementById(id);
+    el.textContent = message;
+    el.className = "status" + (error ? " error" : "");
+  }
+
+  document.getElementById("uploadForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = document.getElementById("uploadButton");
+    button.disabled = true;
+    showStatus("uploadStatus", "Uploading and reading your document...");
+    try {
+      const formData = new FormData();
+      formData.append("document", document.getElementById("document").files[0]);
+      const data = await api("/upload", {method: "POST", body: formData});
+      showStatus("uploadStatus", `${data.message} (${data.characters} characters extracted)`);
+      document.getElementById("filename").textContent = data.filename;
+      document.getElementById("materialStatus").textContent = "Ready for study";
+    } catch (error) {
+      showStatus("uploadStatus", error.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  document.getElementById("askForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = document.getElementById("askButton");
+    button.disabled = true;
+    document.getElementById("answer").textContent = "Thinking...";
+    try {
+      const data = await api("/ask", {
+        method: "POST",
+        body: JSON.stringify({question: document.getElementById("question").value})
+      });
+      document.getElementById("answer").textContent = data.answer;
+    } catch (error) {
+      document.getElementById("answer").textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  let activeQuiz = null;
+
+  document.getElementById("startQuiz").addEventListener("click", async () => {
+    const area = document.getElementById("quizArea");
+    area.textContent = "Preparing your quiz...";
+    try {
+      const data = await api("/quiz", {
+        method: "POST",
+        body: JSON.stringify({
+          topic: document.getElementById("topic").value || "General",
+          difficulty: document.getElementById("difficulty").value
+        })
+      });
+      activeQuiz = {id: data.quiz_id, total: data.total, answered: 0};
+      renderQuestion(data.question);
+    } catch (error) {
+      area.textContent = error.message;
+    }
+  });
+
+  function renderQuestion(question) {
+    const area = document.getElementById("quizArea");
+    area.replaceChildren();
+
+    const progress = document.createElement("p");
+    progress.className = "muted";
+    progress.textContent = `Question ${activeQuiz.answered + 1} of ${activeQuiz.total} · ${question.difficulty}`;
+    area.append(progress);
+
+    const heading = document.createElement("h3");
+    heading.textContent = question.question;
+    area.append(heading);
+
+    const form = document.createElement("form");
+    question.options.forEach((option, index) => {
+      const label = document.createElement("label");
+      label.className = "option";
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = "quizOption";
+      radio.value = String(index);
+      radio.required = true;
+      label.append(radio, document.createTextNode(option));
+      form.append(label);
+    });
+
+    const button = document.createElement("button");
+    button.type = "submit";
+    button.textContent = "Check answer";
+    form.append(button);
+    form.addEventListener("submit", submitAnswer);
+    area.append(form);
+  }
+
+  async function submitAnswer(event) {
+    event.preventDefault();
+    const area = document.getElementById("quizArea");
+    const selected = new FormData(event.currentTarget).get("quizOption");
+    if (selected === null || !activeQuiz) return;
+
+    const buttons = event.currentTarget.querySelectorAll("button, input");
+    buttons.forEach(button => button.disabled = true);
+
+    try {
+      const data = await api("/quiz/answer", {
+        method: "POST",
+        body: JSON.stringify({quiz_id: activeQuiz.id, answer: Number(selected)})
+      });
+
+      activeQuiz.answered++;
+      const result = document.createElement("div");
+      result.className = "answer";
+      result.textContent =
+        `${data.correct ? "✅ Correct!" : "💡 Not quite."}\n${data.explanation || ""}\nNext difficulty: ${data.next_difficulty}`;
+      area.replaceChildren(result);
+
+      if (data.finished) {
+        const score = document.createElement("h3");
+        score.textContent = `Quiz complete: ${data.score}/${data.total} (${data.accuracy}%)`;
+        area.append(score);
+
+        const refresh = document.createElement("button");
+        refresh.textContent = "View updated dashboard";
+        refresh.onclick = () => window.location.reload();
+        area.append(refresh);
+      } else {
+        const next = document.createElement("button");
+        next.textContent = "Next question →";
+        next.onclick = () => renderQuestion(data.question);
+        area.append(next);
+      }
+    } catch (error) {
+      area.textContent = error.message;
+    }
+  }
+</script>
+</body>
+</html>

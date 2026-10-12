@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Adaptive Quiz · EduAdapt{% endblock %}
+{% block content %}
+<div class="page-title"><div class="eyebrow">ADAPTIVE QUESTION ENGINE</div><h1>Practice that meets you where you are.</h1><p>Generate a quiz from indexed source passages. Results feed your topic-wise learning profile.</p></div>
+<form class="quiz-config" method="post"><div class="field"><label>Topic (optional)</label><input name="topic" value="{{ topic }}" placeholder="e.g. overfitting, precision, clustering"></div><div class="field"><label>Question difficulty</label><select name="difficulty"><option value="adaptive" {% if difficulty=='adaptive' %}selected{% endif %}>Adaptive (easy → harder)</option><option value="easy" {% if difficulty=='easy' %}selected{% endif %}>Easy</option><option value="medium" {% if difficulty=='medium' %}selected{% endif %}>Medium</option><option value="hard" {% if difficulty=='hard' %}selected{% endif %}>Hard</option></select></div><button class="button" type="submit">Generate quiz →</button></form>
+{% if questions %}
+<form method="post" action="{{ url_for('submit_quiz') }}" class="quiz-list">
+{% for q in questions %}
+<article class="quiz-card"><div class="question-meta"><span>QUESTION {{ loop.index }} / {{ questions|length }}</span><span class="difficulty {{ q.difficulty }}">{{ q.difficulty }}</span></div><h3>{{ q.question }}</h3><div class="options">{% for option in q.options %}<label class="option"><input type="radio" name="answer_{{ q.id }}" value="{{ option }}" required><span>{{ option }}</span></label>{% endfor %}</div><div class="question-source">Source: {{ q.source }}</div>
+<input type="hidden" name="qid" value="{{ q.id }}"><input type="hidden" name="question_{{ q.id }}" value="{{ q.question }}"><input type="hidden" name="topic_{{ q.id }}" value="{{ topic or 'General study' }}"><input type="hidden" name="difficulty_{{ q.id }}" value="{{ q.difficulty }}"><input type="hidden" name="correct_{{ q.id }}" value="{{ q.correct }}">
+</article>
+{% endfor %}<button class="button" type="submit">Submit answers →</button></form>
+{% elif request.method == 'POST' %}<div class="empty"><h3>No quiz could be generated</h3><p>Upload readable learning material first or try a broader topic.</p></div>
+{% else %}<div class="tip-card"><strong>How adaptation works</strong><span>Choose Adaptive to start with easier questions and increase difficulty during quiz generation.</span><span>Your results are saved to the Learning Gaps dashboard.</span><span>Generated questions are a prototype; review them before formal grading.</span></div>{% endif %}
+{% endblock %}

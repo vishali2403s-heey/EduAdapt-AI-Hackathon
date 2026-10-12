@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Learning Gaps · EduAdapt{% endblock %}
+{% block content %}
+<div class="page-title"><div class="eyebrow">LEARNING GAP INTELLIGENCE</div><h1>Your next best step.</h1><p>Recommendations are calculated from your saved quiz attempts, grouped by topic.</p></div>
+{% if stats %}
+<div class="progress-grid">{% for s in stats %}<article class="progress-card"><div class="progress-top"><strong>{{ s.topic }}</strong><span>{{ s.percent }}%</span></div><div class="bar"><span style="width:{{ s.percent }}%"></span></div><small>{{ s.correct }}/{{ s.attempts }} correct answers</small><div class="status {{ 'weak' if s.percent < 50 else ('practice' if s.percent < 75 else 'strong') }}">{% if s.percent < 50 %}Needs review{% elif s.percent < 75 %}Practise more{% else %}On track{% endif %}</div></article>{% endfor %}</div>
+<section class="revision"><div class="eyebrow">PERSONALIZED REVISION PLAN</div><h2>Recommended study order</h2>{% for item in plan %}<div class="plan-item"><span class="plan-number">{{ loop.index }}</span><p>{{ item|safe }}</p></div>{% endfor %}</section>
+{% else %}<div class="empty"><div class="empty-icon">↗</div><h3>Your learning profile is waiting</h3><p>Upload materials, take a quiz, and submit your answers. The system will identify topics that need revision.</p><a class="button" href="{{ url_for('quiz') }}">Take your first quiz →</a></div>{% endif %}
+{% endblock %}

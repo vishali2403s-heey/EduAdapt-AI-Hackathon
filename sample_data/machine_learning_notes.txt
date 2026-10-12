@@ -1,0 +1,34 @@
+MACHINE LEARNING STUDY NOTES — DEMO DATASET
+These original demo notes are provided to test EduAdapt AI. They are not a complete textbook.
+
+[00:00:10] Machine learning is a field of artificial intelligence that enables computer systems to learn patterns from data and make predictions or decisions without being explicitly programmed for every individual case.
+
+[00:01:05] Supervised learning uses labelled examples. Each training example includes input features and a known target label or value. Classification predicts a category, while regression predicts a continuous numerical value.
+
+[00:02:20] Unsupervised learning works with data that does not have target labels. Clustering groups similar examples together. Dimensionality reduction represents data using fewer variables while attempting to preserve useful structure.
+
+[00:03:12] Overfitting occurs when a model learns details and noise in the training data so closely that it performs poorly on new examples. A model may have very high training accuracy but lower validation accuracy.
+
+[00:04:08] Underfitting occurs when a model is too simple to capture important patterns in the data. It often performs poorly on both the training set and the validation set.
+
+[00:05:15] A training set is used to fit model parameters. A validation set helps select hyperparameters and compare model choices. A test set estimates final performance on data that was not used during model development.
+
+[00:06:25] Regularization discourages overly complex models by adding a penalty to the learning objective. L1 regularization can encourage sparse parameter values. L2 regularization penalizes large squared parameter values.
+
+[00:07:40] A confusion matrix compares predicted classes with actual classes. Accuracy is the fraction of all predictions that are correct. Precision measures the fraction of positive predictions that are truly positive. Recall measures the fraction of actual positives that are correctly identified.
+
+[00:08:55] The F1 score is the harmonic mean of precision and recall. It can be useful when both false positives and false negatives matter, particularly when classes are imbalanced.
+
+[00:10:05] Feature scaling places numerical features on comparable scales. Standardization commonly subtracts the training mean and divides by the training standard deviation. Fit scaling transformations on the training data, then apply the same transformation to validation and test data to avoid data leakage.
+
+[00:11:20] Cross-validation evaluates a model across several train-validation splits. It provides a more stable estimate than relying on a single split, especially when the available dataset is limited.
+
+[00:12:35] Data leakage happens when information that would not be available at prediction time influences model training or evaluation. Leakage can make performance estimates look unrealistically good.
+
+[00:13:45] A decision tree makes predictions by splitting examples according to feature conditions. Random forests combine predictions from many decision trees trained with randomness in data samples and feature selection.
+
+[00:14:50] Gradient descent updates model parameters in the direction that reduces a loss function. The learning rate controls the size of each update. A learning rate that is too large can make training unstable, while a very small learning rate can make learning slow.
+
+[00:16:05] An embedding is a numerical vector representation of content. Similarity search compares vectors or text representations to find content relevant to a query. Retrieval-augmented generation retrieves relevant source passages before a language model generates a response.
+
+[00:17:30] Source citations help a learner verify where an answer came from. A reliable study assistant should show the source filename and a page, slide, section, or video timestamp when that location is available. If the uploaded sources do not support an answer, the system should say that it could not find enough evidence.

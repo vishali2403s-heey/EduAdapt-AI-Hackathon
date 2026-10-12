@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}AI Tutor · EduAdapt{% endblock %}
+{% block content %}
+<div class="page-title"><div class="eyebrow">SOURCE-CITED TUTOR</div><h1>Ask your learning materials.</h1><p>Answers are grounded in retrieved passages from your uploaded files. Check the citations to verify them.</p></div>
+<form class="question-form" method="post"><label for="question">What would you like to understand?</label><textarea id="question" name="question" placeholder="e.g. What is overfitting, and how can it be reduced?" required>{{ question }}</textarea><button class="button" type="submit">Find answer →</button></form>
+{% if answer %}
+<section class="answer-card"><div class="answer-heading"><span class="answer-symbol">✦</span><div><div class="eyebrow">RETRIEVED EXPLANATION</div><h2>From your course materials</h2></div></div><div class="answer-text">{{ answer.text }}</div>
+{% if answer.sources %}<h3 class="source-title">Sources used</h3><div class="source-list">{% for s in answer.sources %}<div class="source-item"><span class="source-icon">↗</span><div><strong>{{ s.filename }}</strong><small>{{ s.location }} · relevance {{ s.relevance }}</small></div></div>{% endfor %}</div>{% endif %}
+</section>
+{% else %}<div class="tip-card"><strong>Try asking:</strong><span>What is overfitting?</span><span>Explain precision and recall.</span><span>How do training and validation sets differ?</span></div>{% endif %}
+{% endblock %}

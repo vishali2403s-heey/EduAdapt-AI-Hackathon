@@ -1,0 +1,24 @@
+
+# Python environment and cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Local secrets
+.env
+.env.*
+
+# Uploaded user files
+uploads/*
+!uploads/.gitkeep
+
+# Local database
+eduadapt.db
+*.sqlite
+*.sqlite3
+
+# Editor and operating system files
+.vscode/
+.DS_Store
+Thumbs.db

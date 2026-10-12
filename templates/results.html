@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Quiz Results · EduAdapt{% endblock %}
+{% block content %}
+<div class="page-title"><div class="eyebrow">ASSESSMENT COMPLETE</div><h1>Your learning snapshot.</h1><p>Your result has been saved to Learning Gaps.</p></div>
+<div class="score-card"><div class="score-circle">{{ score }}/{{ total }}</div><div><h2>{% if total and score/total >= .8 %}Great work!{% elif total and score/total >= .5 %}Good progress — keep practising.{% else %}A chance to strengthen your basics.{% endif %}</h2><p>{{ (100*score/total)|round|int if total else 0 }}% accuracy on this attempt.</p></div></div>
+<div class="result-list">{% for r in results %}<article class="result-row"><div class="result-mark {{ 'good' if r.correct else 'bad' }}">{{ '✓' if r.correct else '!' }}</div><div><strong>{{ r.question }}</strong><p>Your answer: {{ r.selected or 'No answer' }}</p>{% if not r.correct %}<small>Expected keyword: {{ r.correct_answer }}</small>{% endif %}<small>Topic: {{ r.topic }}</small></div></article>{% endfor %}</div>
+<a class="button" href="{{ url_for('progress') }}">View learning gaps →</a> <a class="button secondary" href="{{ url_for('quiz') }}">Try another quiz</a>
+{% endblock %}

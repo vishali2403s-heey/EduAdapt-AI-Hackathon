@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}EduAdapt AI{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('index') }}"><span class="logo">E</span><span>EduAdapt <b>AI</b><small>Personalized learning companion</small></span></a>
+  <nav>
+    <a href="{{ url_for('index') }}">Library</a>
+    <a href="{{ url_for('ask') }}">AI Tutor</a>
+    <a href="{{ url_for('quiz') }}">Adaptive Quiz</a>
+    <a href="{{ url_for('progress') }}">Learning Gaps</a>
+  </nav>
+</header>
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer>EduAdapt AI · Hackathon prototype · Source-grounded learning</footer>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}EduAdapt AI · Library{% endblock %}
+{% block content %}
+<section class="hero">
+  <div><div class="eyebrow">YOUR AI STUDY COMPANION</div><h1>Learn smarter.<br><span>Not just longer.</span></h1>
+  <p>Bring your course materials together, ask questions with source citations, and let your practice guide what you study next.</p>
+  <div class="hero-actions"><a class="button" href="{{ url_for('ask') }}">Ask your tutor →</a><a class="button secondary" href="{{ url_for('quiz') }}">Start a quiz</a></div></div>
+  <div class="hero-art"><div class="orb">✦</div><div class="floating f1">📚 <span>Source cited</span></div><div class="floating f2">🎯 <span>Adaptive practice</span></div><div class="floating f3">📈 <span>Learning insights</span></div></div>
+</section>
+<section class="stats">
+  <div class="stat"><span>Indexed sections</span><strong>{{ total }}</strong></div>
+  <div class="stat"><span>Quiz attempts</span><strong>{{ attempts }}</strong></div>
+  <div class="stat"><span>Correct answers</span><strong>{{ correct }}</strong></div>
+</section>
+<section class="section-head"><div><div class="eyebrow">BUILD YOUR KNOWLEDGE BASE</div><h2>Course library</h2><p>Upload PDFs, PowerPoint slides, notes, or timestamped lecture transcripts.</p></div></section>
+<form class="upload-card" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+  <div class="upload-icon">↑</div><div><h3>Add learning material</h3><p>PDF · PPTX · TXT · MD · Up to 20 MB</p><input type="file" name="file" accept=".pdf,.pptx,.txt,.md" required></div><button class="button" type="submit">Upload & index</button>
+</form>
+<div class="doc-list">
+{% if docs %}
+  {% for doc in docs %}<div class="doc-row"><div class="file-icon">▤</div><div class="doc-info"><strong>{{ doc.filename }}</strong><small>{{ doc.chunks_count }} indexed sections · {{ doc.uploaded_at }}</small></div><span class="badge">Indexed</span></div>{% endfor %}
+{% else %}
+  <div class="empty"><div class="empty-icon">✧</div><h3>Your library starts here</h3><p>Upload a document to power your tutor and adaptive quizzes. Or use the sample dataset included with the project.</p><div class="hint">Demo file: <code>sample_data/machine_learning_notes.txt</code> — upload it from your project folder.</div></div>
+{% endif %}
+</div>
+<form action="{{ url_for('reset') }}" method="post" class="reset-form" onsubmit="return confirm('Delete all uploaded material and quiz history?')"><button class="text-button" type="submit">Clear demo data</button></form>
+{% endblock %}
